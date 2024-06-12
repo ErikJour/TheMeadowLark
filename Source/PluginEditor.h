@@ -14,7 +14,9 @@
 //==============================================================================
 /**
 */
-class TheMeadowlarkAudioProcessorEditor  : public juce::AudioProcessorEditor
+class TheMeadowlarkAudioProcessorEditor  : public juce::AudioProcessorEditor,
+                                           public juce::Button::Listener,
+                                           public juce::Slider::Listener
 {
 public:
     TheMeadowlarkAudioProcessorEditor (TheMeadowlarkAudioProcessor&);
@@ -23,8 +25,16 @@ public:
     //==============================================================================
     void paint (juce::Graphics&) override;
     void resized() override;
+    void buttonClicked (juce::Button*) override;
+    void sliderValueChanged (juce::Slider*) override;
 
 private:
+    
+    juce::TextButton onButton {"On"};
+    
+    juce::Slider reverbMixSlider;
+    
+    juce::Slider speedSlider;
   
     TheMeadowlarkAudioProcessor& audioProcessor;
 

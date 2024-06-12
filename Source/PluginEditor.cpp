@@ -13,7 +13,20 @@
 TheMeadowlarkAudioProcessorEditor::TheMeadowlarkAudioProcessorEditor (TheMeadowlarkAudioProcessor& p)
     : AudioProcessorEditor (&p), audioProcessor (p)
 {
-  
+    //On Button
+    onButton.addListener(this);
+    addAndMakeVisible(onButton);
+    
+    //Distance Slider
+    reverbMixSlider.addListener(this);
+    addAndMakeVisible(reverbMixSlider);
+    
+    
+    //Speed Slider
+    speedSlider.addListener(this);
+    addAndMakeVisible(speedSlider);
+    
+    
     setSize (400, 300);
 }
 
@@ -33,5 +46,26 @@ void TheMeadowlarkAudioProcessorEditor::paint (juce::Graphics& g)
 
 void TheMeadowlarkAudioProcessorEditor::resized()
 {
+    onButton.setBounds(300, 50, 50, 50);
+}
 
+void TheMeadowlarkAudioProcessorEditor::buttonClicked (juce::Button* button)
+{
+    if (button == &onButton)
+    {
+        audioProcessor.ifButtonDepressed();
+    }
+}
+
+void TheMeadowlarkAudioProcessorEditor::sliderValueChanged(juce::Slider* slider)
+{
+    if (slider == &reverbMixSlider)
+    {
+        audioProcessor.reverbSliderValueChanged();
+    }
+    
+    if (slider == &speedSlider)
+    {
+        audioProcessor.speedSliderValueChanged();
+    }
 }

@@ -9,6 +9,7 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
+
 //==============================================================================
 TheMeadowlarkAudioProcessor::TheMeadowlarkAudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
@@ -24,13 +25,21 @@ TheMeadowlarkAudioProcessor::TheMeadowlarkAudioProcessor()
 {
     mBird.clearVoices();
     
-    for (int voice = 0; voice < 2; ++voice)
+    for (int voice = 0; voice < 1; ++voice)
     {
         mBird.addVoice (new BirdGenerator());
     }
     
     mBird.clearSounds();
+    
     mBird.addSound(new BirdSound());
+    
+    lowPassFilter.setSampleRate(mCurrentSampleRate);
+    
+    highPassFilter.setSampleRate(mCurrentSampleRate);
+    
+    buttonDepressed = true;
+    
 }
 
 TheMeadowlarkAudioProcessor::~TheMeadowlarkAudioProcessor()
@@ -102,18 +111,15 @@ void TheMeadowlarkAudioProcessor::changeProgramName (int index, const juce::Stri
 //==============================================================================
 void TheMeadowlarkAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-
     mCurrentSampleRate = sampleRate;
+    
     mBird.setCurrentPlaybackSampleRate(sampleRate);
     
-    for (int i = 0; i < mBird.getNumVoices(); ++i)
-    {
-        if (auto voice = dynamic_cast<BirdGenerator*>(mBird.getVoice(i)))
-        {
-            voice->setCurrentPlaybackSampleRate(sampleRate);
-        }
-    }
+    lowPassFilter.setSampleRate(sampleRate);
+    lowPassFilter.setLowPassFilterParams(4000.0, 0.05);
     
+    highPassFilter.setSampleRate(sampleRate);
+    highPassFilter.setHighPassFilterParams(100.0, 0.05);
 }
 
 void TheMeadowlarkAudioProcessor::releaseResources()
@@ -128,15 +134,11 @@ bool TheMeadowlarkAudioProcessor::isBusesLayoutSupported (const BusesLayout& lay
     juce::ignoreUnused (layouts);
     return true;
   #else
-    // This is the place where you check if the layout is supported.
-    // In this template code we only support mono or stereo.
-    // Some plugin hosts, such as certain GarageBand versions, will only
-    // load plugins that support stereo bus layouts.
+   
     if (layouts.getMainOutputChannelSet() != juce::AudioChannelSet::mono()
      && layouts.getMainOutputChannelSet() != juce::AudioChannelSet::stereo())
         return false;
 
-    // This checks if the input layout matches the output layout
    #if ! JucePlugin_IsSynth
     if (layouts.getMainOutputChannelSet() != layouts.getMainInputChannelSet())
         return false;
@@ -147,24 +149,48 @@ bool TheMeadowlarkAudioProcessor::isBusesLayoutSupported (const BusesLayout& lay
 }
 #endif
 
-void TheMeadowlarkAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
+void TheMeadowlarkAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
-    
     buffer.clear();
     
     juce::ScopedNoDenormals noDenormals;
+    
     auto totalNumOutputChannels = getTotalNumOutputChannels();
 
     for (auto i = 0; i < totalNumOutputChannels; ++i)
-        buffer.clear (i, 0, buffer.getNumSamples());
+        buffer.clear(i, 0, buffer.getNumSamples());
 
-    mBird.renderNextBlock(buffer, midiMessages, 0, buffer.getNumSamples());
+    if (buttonDepressed == true)
+    {
+        mBird.renderNextBlock(buffer, midiMessages, 0, buffer.getNumSamples());
+        lowPassFilter.process(buffer);
+        highPassFilter.process(buffer);
+    }
+    else
+    {
+        buffer.clear();
+    }
+}
+
+void TheMeadowlarkAudioProcessor::ifButtonDepressed()
+{
+    buttonDepressed = !buttonDepressed;
+}
+
+void TheMeadowlarkAudioProcessor::reverbSliderValueChanged()
+{
+    
+}
+
+void TheMeadowlarkAudioProcessor::speedSliderValueChanged()
+{
+    
 }
 
 //==============================================================================
 bool TheMeadowlarkAudioProcessor::hasEditor() const
 {
-    return true; // (change this to false if you choose to not supply an editor)
+    return true;
 }
 
 juce::AudioProcessorEditor* TheMeadowlarkAudioProcessor::createEditor()
@@ -181,6 +207,11 @@ void TheMeadowlarkAudioProcessor::getStateInformation (juce::MemoryBlock& destDa
 void TheMeadowlarkAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
  
+}
+
+void TheMeadowlarkAudioProcessor::currentLowPassFreq(float updatedLowPassFreq)
+{
+    updatedLowPassFreq = lowPassFilter.getLowCutFreq();
 }
 
 //==============================================================================

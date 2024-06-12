@@ -4,7 +4,7 @@ build/
 DerivedData/
 
 # Ignore JUCE auto-generated files
-JuceLibraryCode/
+#JuceLibraryCode/
 
 # Ignore IDE specific files
 *.xcworkspace

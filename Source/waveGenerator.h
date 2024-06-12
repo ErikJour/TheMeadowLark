@@ -26,4 +26,6 @@ private:
     
     double mPhase;
     double mIncrement;
+    
+    juce::Random random;
 };

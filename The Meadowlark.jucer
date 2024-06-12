@@ -5,6 +5,12 @@
               pluginCharacteristicsValue="pluginIsSynth,pluginWantsMidiIn">
   <MAINGROUP id="hlksTm" name="The Meadowlark">
     <GROUP id="{070BADC2-0F0A-BA8C-BC86-9CE804A2B2C3}" name="DSP">
+      <FILE id="CDSUEq" name="soundEvent.cpp" compile="1" resource="0" file="Source/soundEvent.cpp"/>
+      <FILE id="RfCu38" name="soundEvent.h" compile="0" resource="0" file="Source/soundEvent.h"/>
+      <FILE id="Ocu3Cy" name="sequencer.cpp" compile="1" resource="0" file="Source/sequencer.cpp"/>
+      <FILE id="OsVYHx" name="sequencer.h" compile="0" resource="0" file="Source/sequencer.h"/>
+      <FILE id="JH2z3R" name="birdReverb.cpp" compile="1" resource="0" file="Source/birdReverb.cpp"/>
+      <FILE id="Tb4T7r" name="birdReverb.h" compile="0" resource="0" file="Source/birdReverb.h"/>
       <FILE id="VUVbSH" name="lowPassFilter.cpp" compile="1" resource="0"
             file="Source/lowPassFilter.cpp"/>
       <FILE id="vw9eAr" name="lowPassFilter.h" compile="0" resource="0" file="Source/lowPassFilter.h"/>
@@ -12,8 +18,6 @@
             file="Source/highPassFilter.cpp"/>
       <FILE id="ZRY0WL" name="highPassFilter.h" compile="0" resource="0"
             file="Source/highPassFilter.h"/>
-      <FILE id="u4ENL4" name="arEnvelope.cpp" compile="1" resource="0" file="Source/arEnvelope.cpp"/>
-      <FILE id="MrxHyP" name="arEnvelope.h" compile="0" resource="0" file="Source/arEnvelope.h"/>
       <FILE id="UTFFYy" name="waveGenerator.cpp" compile="1" resource="0"
             file="Source/waveGenerator.cpp"/>
       <FILE id="SiGg93" name="waveGenerator.h" compile="0" resource="0" file="Source/waveGenerator.h"/>
