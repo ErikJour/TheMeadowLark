@@ -10,6 +10,7 @@
 #include "PluginEditor.h"
 
 
+
 //==============================================================================
 TheMeadowlarkAudioProcessor::TheMeadowlarkAudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
@@ -39,7 +40,7 @@ TheMeadowlarkAudioProcessor::TheMeadowlarkAudioProcessor()
     highPassFilter.setSampleRate(mCurrentSampleRate);
     
     buttonDepressed = true;
-    
+        
 }
 
 TheMeadowlarkAudioProcessor::~TheMeadowlarkAudioProcessor()
@@ -120,6 +121,7 @@ void TheMeadowlarkAudioProcessor::prepareToPlay (double sampleRate, int samplesP
     
     highPassFilter.setSampleRate(sampleRate);
     highPassFilter.setHighPassFilterParams(100.0, 0.05);
+    
 }
 
 void TheMeadowlarkAudioProcessor::releaseResources()
@@ -160,7 +162,7 @@ void TheMeadowlarkAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer,
     for (auto i = 0; i < totalNumOutputChannels; ++i)
         buffer.clear(i, 0, buffer.getNumSamples());
 
-    if (buttonDepressed == true)
+    if (buttonDepressed == false)
     {
         mBird.renderNextBlock(buffer, midiMessages, 0, buffer.getNumSamples());
         lowPassFilter.process(buffer);

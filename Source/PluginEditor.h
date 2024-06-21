@@ -37,6 +37,8 @@ private:
     juce::Slider speedSlider;
   
     TheMeadowlarkAudioProcessor& audioProcessor;
+    
+    bool isButtonOn;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TheMeadowlarkAudioProcessorEditor)
 };

@@ -4,9 +4,13 @@
               addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1" pluginVST3Category="Instrument"
               pluginCharacteristicsValue="pluginIsSynth,pluginWantsMidiIn">
   <MAINGROUP id="hlksTm" name="The Meadowlark">
+    <GROUP id="{76EC9F0D-9A7A-BACC-C4DD-9CE284233679}" name="Images">
+      <FILE id="tmFSjF" name="MeadowLark_Outline_V3.png" compile="0" resource="1"
+            file="../../MeadowLark_Outline_V3.png"/>
+      <FILE id="OROmal" name="MeadowLark_Outline_V1.png" compile="0" resource="1"
+            file="../../MeadowLark_Outline_V1.png"/>
+    </GROUP>
     <GROUP id="{070BADC2-0F0A-BA8C-BC86-9CE804A2B2C3}" name="DSP">
-      <FILE id="CDSUEq" name="soundEvent.cpp" compile="1" resource="0" file="Source/soundEvent.cpp"/>
-      <FILE id="RfCu38" name="soundEvent.h" compile="0" resource="0" file="Source/soundEvent.h"/>
       <FILE id="Ocu3Cy" name="sequencer.cpp" compile="1" resource="0" file="Source/sequencer.cpp"/>
       <FILE id="OsVYHx" name="sequencer.h" compile="0" resource="0" file="Source/sequencer.h"/>
       <FILE id="JH2z3R" name="birdReverb.cpp" compile="1" resource="0" file="Source/birdReverb.cpp"/>

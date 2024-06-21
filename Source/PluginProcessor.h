@@ -15,6 +15,7 @@
 #include "lowPassFilter.h"
 #include "highPassFilter.h"
 
+
 //==============================================================================
 /**
 */
@@ -64,7 +65,7 @@ public:
     void currentLowPassFreq (float updatedLowPassFreq);
 
 private:
-    
+        
     juce::Synthesiser mBird;
     
     double mCurrentSampleRate;
@@ -76,6 +77,7 @@ private:
     LowPass lowPassFilter;
     
     HighPass highPassFilter;
+    
     
     
     //==============================================================================

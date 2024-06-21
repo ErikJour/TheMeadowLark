@@ -13,9 +13,7 @@
 #include "waveGenerator.h"
 #include "birdSound.h"
 #include "lowPassFilter.h"
-
-
-
+#include "sequencer.h"
 
 
 class BirdGenerator : public juce::SynthesiserVoice
@@ -26,6 +24,7 @@ public:
     
     bool canPlaySound (juce::SynthesiserSound* sound) override;
     void setADSRSampleRate (double sampleRate);
+    void setSeqeuncerSampleRate (double sampleRate);
     void getEnvelopeParams(float attack, float release);
     void startNote (int midiNoteNumber, float velocity, juce::SynthesiserSound* sound, int currentPitchWheelPosition) override;
     void stopNote (float velocity, bool allowTailOff) override;
@@ -35,7 +34,10 @@ public:
   
     
 private:
+    
     WaveGenerator mWaveGenerator;
+    float* newCircularBufferLeft;
+    float* newCircularBufferRight;
     
     double mAmplitude;
     double mFrequency;
@@ -46,4 +48,12 @@ private:
     juce::ADSR adsr;
     juce::ADSR::Parameters adsrParams;
     
+    Sequencer sequencer;
+    
+    int writeHeadPosition;
+    
+    int circularBufferTime;
+    
+    int readHeadPosition;
+
 };
