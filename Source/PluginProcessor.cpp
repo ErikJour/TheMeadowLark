@@ -109,6 +109,16 @@ void TheMeadowlarkAudioProcessor::changeProgramName (int index, const juce::Stri
 {
 }
 
+void TheMeadowlarkAudioProcessor::setDistanceParameters()
+{
+    juce::Reverb::Parameters distanceParameters;
+    distanceParameters.dryLevel = 0.8f;
+    distanceParameters.wetLevel = 0.0f;
+    distanceParameters.width = 0.7f;
+    distanceParameters.roomSize = 1.0f;
+    distanceParameters.damping = 0.0f;
+}
+
 //==============================================================================
 void TheMeadowlarkAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
@@ -122,6 +132,8 @@ void TheMeadowlarkAudioProcessor::prepareToPlay (double sampleRate, int samplesP
     highPassFilter.setSampleRate(sampleRate);
     highPassFilter.setHighPassFilterParams(100.0, 0.05);
     
+    distance.reset();
+    distance.setSampleRate(sampleRate);
 }
 
 void TheMeadowlarkAudioProcessor::releaseResources()
@@ -159,15 +171,21 @@ void TheMeadowlarkAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer,
     
     auto totalNumOutputChannels = getTotalNumOutputChannels();
 
-    for (auto i = 0; i < totalNumOutputChannels; ++i)
-        buffer.clear(i, 0, buffer.getNumSamples());
-
     if (buttonDepressed == false)
     {
+        buffer.clear();
         mBird.renderNextBlock(buffer, midiMessages, 0, buffer.getNumSamples());
         lowPassFilter.process(buffer);
         highPassFilter.process(buffer);
+        
+        for (int channel = 0; channel < totalNumOutputChannels; ++channel)
+               {
+                   birdGain.process(buffer.getWritePointer(channel), buffer.getWritePointer(channel), buffer.getNumSamples());
+               }
+        
+        distance.processStereo(buffer.getWritePointer(0), buffer.getWritePointer(1), buffer.getNumSamples());
     }
+    
     else
     {
         buffer.clear();
@@ -179,15 +197,6 @@ void TheMeadowlarkAudioProcessor::ifButtonDepressed()
     buttonDepressed = !buttonDepressed;
 }
 
-void TheMeadowlarkAudioProcessor::reverbSliderValueChanged()
-{
-    
-}
-
-void TheMeadowlarkAudioProcessor::speedSliderValueChanged()
-{
-    
-}
 
 //==============================================================================
 bool TheMeadowlarkAudioProcessor::hasEditor() const
@@ -214,6 +223,29 @@ void TheMeadowlarkAudioProcessor::setStateInformation (const void* data, int siz
 void TheMeadowlarkAudioProcessor::currentLowPassFreq(float updatedLowPassFreq)
 {
     updatedLowPassFreq = lowPassFilter.getLowCutFreq();
+}
+
+void TheMeadowlarkAudioProcessor::sliderValueChanged()
+{
+    if (auto* editor = dynamic_cast<TheMeadowlarkAudioProcessorEditor*>(getActiveEditor()))
+    {
+        float sliderValue = editor->getDistanceSliderValue();
+        float wetLevel = juce::jlimit(0.0f, 1.0f, sliderValue); // Ensure wetLevel is within valid range
+        
+        juce::Reverb::Parameters reverbParams;
+        reverbParams.wetLevel = wetLevel;
+        reverbParams.dryLevel = 1.0f - wetLevel;
+        distance.setParameters(reverbParams);
+
+        
+        std::cout << "wet level = " << reverbParams.wetLevel << std::endl;
+        std::cout << "dry level = " << reverbParams.dryLevel << std::endl;
+    }
+}
+
+void TheMeadowlarkAudioProcessor::setGain(float gainValue)
+{
+    birdGain.setGain(gainValue);
 }
 
 //==============================================================================

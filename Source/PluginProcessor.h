@@ -14,6 +14,8 @@
 #include "birdReverb.h"
 #include "lowPassFilter.h"
 #include "highPassFilter.h"
+#include "birdGain.h"
+
 
 
 //==============================================================================
@@ -36,8 +38,6 @@ public:
 
     void processBlock (juce::AudioBuffer<float>&, juce::MidiBuffer&) override;
     void ifButtonDepressed();
-    void reverbSliderValueChanged();
-    void speedSliderValueChanged();
 
     //==============================================================================
     juce::AudioProcessorEditor* createEditor() override;
@@ -57,12 +57,19 @@ public:
     void setCurrentProgram (int index) override;
     const juce::String getProgramName (int index) override;
     void changeProgramName (int index, const juce::String& newName) override;
+    void setDistanceParameters();
 
     //==============================================================================
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
     
     void currentLowPassFreq (float updatedLowPassFreq);
+    void sliderValueChanged();
+    void lowPassSliderValueChanged();
+    void setGain (float gainValue);
+    
+    double volume;
+    BirdGenerator birdGenerator;
 
 private:
         
@@ -77,6 +84,13 @@ private:
     LowPass lowPassFilter;
     
     HighPass highPassFilter;
+    
+    juce::Reverb distance;
+    
+    BirdGain birdGain;
+    
+   
+
     
     
     

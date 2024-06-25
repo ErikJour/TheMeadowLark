@@ -11,6 +11,7 @@
 #include "sequencer.h"
 
 
+
 Sequencer::Sequencer() : mCircularBufferLeft (nullptr), mCircularBufferRight (nullptr), mWritePosition(0), mReadPosition(0)
 {
 }

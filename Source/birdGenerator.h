@@ -16,6 +16,7 @@
 #include "sequencer.h"
 
 
+
 class BirdGenerator : public juce::SynthesiserVoice
 {
 public:
@@ -30,30 +31,26 @@ public:
     void stopNote (float velocity, bool allowTailOff) override;
     void pitchWheelMoved (int newPitchWheelValue) override;
     void controllerMoved (int controllerNumber, int newControllerValue) override;
+    void initDistance();
+    void setDistanceParameters();
     void renderNextBlock (juce::AudioBuffer<float> &outputBuffer, int startSample, int numSamples) override;
-  
+    
     
 private:
     
     WaveGenerator mWaveGenerator;
     float* newCircularBufferLeft;
     float* newCircularBufferRight;
-    
-    double mAmplitude;
     double mFrequency;
     bool mIsActive;
     double mPhase;
     double mSampleRate;
-    
     juce::ADSR adsr;
     juce::ADSR::Parameters adsrParams;
-    
     Sequencer sequencer;
-    
     int writeHeadPosition;
-    
     int circularBufferTime;
-    
     int readHeadPosition;
-
+    juce::Reverb distance;
+    double mAmplitude;
 };

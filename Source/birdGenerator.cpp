@@ -10,7 +10,7 @@
 
 #include "birdGenerator.h"
 
-BirdGenerator::BirdGenerator() : mWaveGenerator(), mAmplitude(0.25), mFrequency(440.0), mIsActive(false), mPhase(0.0), mSampleRate(44100), adsr(), writeHeadPosition(0), circularBufferTime(static_cast<int>(mSampleRate * MAX_BUFFER_TIME)), readHeadPosition(0)
+BirdGenerator::BirdGenerator() : mWaveGenerator(), mFrequency(440.0), mIsActive(false), mPhase(0.0), mSampleRate(44100), adsr(), writeHeadPosition(0), circularBufferTime(static_cast<int>(mSampleRate * MAX_BUFFER_TIME)), readHeadPosition(0), mAmplitude(0.25)
 {
     // Initialize Envelope Parameters
     
@@ -31,6 +31,7 @@ BirdGenerator::BirdGenerator() : mWaveGenerator(), mAmplitude(0.25), mFrequency(
     circularBufferTime = (int) mSampleRate * MAX_BUFFER_TIME;
     
     readHeadPosition = 0;
+    
 }
 
 BirdGenerator::~BirdGenerator()
@@ -71,7 +72,6 @@ void BirdGenerator::startNote(int midiNoteNumber, float velocity, juce::Synthesi
     mAmplitude = velocity;
     mWaveGenerator.setFrequency(mFrequency, mSampleRate);
     mIsActive = true;
-
     adsr.noteOn();
     
     std::cout << "midi note: " << midiNoteNumber << " freq: " << mFrequency << std::endl;
@@ -96,14 +96,32 @@ void BirdGenerator::controllerMoved(int controllerNumber, int newControllerValue
 {
 }
 
+void BirdGenerator::initDistance()
+{
+    distance.reset();
+    distance.setSampleRate(mSampleRate);
+}
+
+
+void BirdGenerator::setDistanceParameters()
+{
+    juce::Reverb::Parameters distanceParameters;
+    distanceParameters.dryLevel = 0.0f;
+    distanceParameters.wetLevel = 1.0f;
+    distanceParameters.width = 0.5f;
+    distanceParameters.roomSize = 1.0f;
+  
+ 
+}
 
 void BirdGenerator::renderNextBlock(juce::AudioBuffer<float> &outputBuffer, int startSample, int numSamples)
 {
     //Clear the Buffer -----------------------
     
     outputBuffer.clear();
-    
+        
     //Go Through the Samples in the Buffer -------------------------
+
     
     for (int sample = 0; sample < numSamples; ++sample)
     {
@@ -111,8 +129,8 @@ void BirdGenerator::renderNextBlock(juce::AudioBuffer<float> &outputBuffer, int 
         if (mIsActive)
         {
             // Apply Sine Wave ------------------------------
-            
-            float currentSample = mAmplitude * mWaveGenerator.getNextSample() *adsr.getNextSample();
+
+            float currentSample =  mAmplitude * mWaveGenerator.getNextSample() *adsr.getNextSample();
             
             //Write into the current sample --------------------------------------------
             
@@ -152,6 +170,7 @@ void BirdGenerator::renderNextBlock(juce::AudioBuffer<float> &outputBuffer, int 
         {
             writeHeadPosition = 0;
         }
+        
         
         //NOTES -------------------------------------------------------------
         
@@ -272,9 +291,7 @@ void BirdGenerator::renderNextBlock(juce::AudioBuffer<float> &outputBuffer, int 
         {
             stopNote(70, true);
         }
-        
         startSample++;
-        
     }
     
     //Tracking the write head position ------------------------------------------

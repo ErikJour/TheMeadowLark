@@ -26,14 +26,34 @@ TheMeadowlarkAudioProcessorEditor::TheMeadowlarkAudioProcessorEditor (TheMeadowl
     reverbMixSlider.addListener(this);
     reverbMixSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
     reverbMixSlider.setTextBoxStyle(juce::Slider::NoTextBox, false, 0, 0);
+    reverbMixSlider.setRange(0.0f, 1.0f, 0.0001f);
+    reverbMixSlider.setValue(0.5f);
     addAndMakeVisible(reverbMixSlider);
     
+    //Distance Label
+    juce::Colour taliesenSunRise = juce::Colour::fromRGB(255, 204, 102);
+
+    distanceLabel.setText("Distance", juce::dontSendNotification);
+    distanceLabel.attachToComponent(&reverbMixSlider, false);
+    distanceLabel.setJustificationType(juce::Justification::centred);
+    distanceLabel.setColour(juce::Label::textColourId, taliesenSunRise); 
+    addAndMakeVisible(distanceLabel);
     
-    //Speed Slider
-    speedSlider.addListener(this);
-    speedSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
-    speedSlider.setTextBoxStyle(juce::Slider::NoTextBox, false, 0, 0);
-    addAndMakeVisible(speedSlider);
+    
+    //Volume Slider
+    volumeSlider.addListener(this);
+    volumeSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
+    volumeSlider.setTextBoxStyle(juce::Slider::NoTextBox, false, 0, 0);
+    volumeSlider.setRange(0.0f, 1.0f, 0.0001f);
+    volumeSlider.setValue(0.5f);
+    addAndMakeVisible(volumeSlider);
+    
+    //Volume Label
+    volumeLabel.setText("Volume", juce::dontSendNotification);
+    volumeLabel.attachToComponent(&volumeSlider, false);
+    volumeLabel.setJustificationType(juce::Justification::centred);
+    volumeLabel.setColour(juce::Label::textColourId, taliesenSunRise);
+    addAndMakeVisible(volumeLabel);
     
     
     setSize (600, 400);
@@ -69,13 +89,13 @@ void TheMeadowlarkAudioProcessorEditor::paint (juce::Graphics& g)
     //Speed Slider------------------------------------------------------
     
     //Init Path
-    speedSlider.setColour(0x1001312, taliesinRed);
+    volumeSlider.setColour(0x1001312, taliesinRed);
 
     //Button
-    speedSlider.setColour( 0x1001300, taliesenSunRise);
+    volumeSlider.setColour( 0x1001300, taliesenSunRise);
     
     //Fill
-    speedSlider.setColour(0x1001311, taliesenEverGreen);
+    volumeSlider.setColour(0x1001311, taliesenEverGreen);
     
 
 }
@@ -88,8 +108,8 @@ void TheMeadowlarkAudioProcessorEditor::resized()
     reverbMixSlider.setBounds(50, 25, 50, 50);
     reverbMixSlider.setSize(100, 100);
     
-    speedSlider.setBounds(450, 275, 50, 50);
-    speedSlider.setSize(100, 100);
+    volumeSlider.setBounds(450, 275, 50, 50);
+    volumeSlider.setSize(100, 100);
 
 
 }
@@ -123,11 +143,19 @@ void TheMeadowlarkAudioProcessorEditor::sliderValueChanged(juce::Slider* slider)
 {
     if (slider == &reverbMixSlider)
     {
-        audioProcessor.reverbSliderValueChanged();
+        audioProcessor.sliderValueChanged();
     }
     
-    if (slider == &speedSlider)
+    if (slider == &volumeSlider)
     {
-        audioProcessor.speedSliderValueChanged();
+        float gainValue = slider->getValue();
+        audioProcessor.setGain(gainValue);
+        
     }
 }
+float TheMeadowlarkAudioProcessorEditor::getDistanceSliderValue() const
+{
+    return reverbMixSlider.getValue();
+}
+
+

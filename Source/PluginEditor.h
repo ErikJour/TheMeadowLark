@@ -27,6 +27,10 @@ public:
     void resized() override;
     void buttonClicked (juce::Button*) override;
     void sliderValueChanged (juce::Slider*) override;
+    float getDistanceSliderValue() const;
+    
+    BirdGenerator birdGenerator;
+
 
 private:
     
@@ -34,11 +38,21 @@ private:
     
     juce::Slider reverbMixSlider;
     
-    juce::Slider speedSlider;
+    juce::Slider volumeSlider;
   
     TheMeadowlarkAudioProcessor& audioProcessor;
     
     bool isButtonOn;
+    
+    juce::Label distanceLabel;
+    
+    juce::Label volumeLabel;
+    
+    double newAmplitude;
+    
+    BirdGain birdGain;
+    
+
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TheMeadowlarkAudioProcessorEditor)
 };

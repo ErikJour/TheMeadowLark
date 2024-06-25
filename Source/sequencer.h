@@ -26,6 +26,8 @@ public:
     void updateWriteHead (int newWriteHeadPosition);
     void getReadHead (float newReadHead);
     
+   
+    
 private:
     
    float*  mCircularBufferLeft;
@@ -34,4 +36,5 @@ private:
     int mCircularBufferLength;
     int mWritePosition;
     float mReadPosition;
+    
 };

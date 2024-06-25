@@ -11,6 +11,8 @@
             file="../../MeadowLark_Outline_V1.png"/>
     </GROUP>
     <GROUP id="{070BADC2-0F0A-BA8C-BC86-9CE804A2B2C3}" name="DSP">
+      <FILE id="o4j0uX" name="birdGain.cpp" compile="1" resource="0" file="Source/birdGain.cpp"/>
+      <FILE id="YbxiEh" name="birdGain.h" compile="0" resource="0" file="Source/birdGain.h"/>
       <FILE id="Ocu3Cy" name="sequencer.cpp" compile="1" resource="0" file="Source/sequencer.cpp"/>
       <FILE id="OsVYHx" name="sequencer.h" compile="0" resource="0" file="Source/sequencer.h"/>
       <FILE id="JH2z3R" name="birdReverb.cpp" compile="1" resource="0" file="Source/birdReverb.cpp"/>
